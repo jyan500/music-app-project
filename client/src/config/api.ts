@@ -1,7 +1,9 @@
 import axios from "axios"
+import { BACKEND_BASE_URL } from "./constants"
 
-const api = axios.create({
-	baseURL: "http://localhost:8000",
+export const api = axios.create({
+	baseURL: BACKEND_BASE_URL,
+	// send cookies
+	// withCredentials: true
 })
 
-export default api
