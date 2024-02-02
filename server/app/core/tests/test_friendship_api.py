@@ -23,7 +23,7 @@ class PrivateFriendshipApiTests(TestCase):
 
 	def setUp(self):
 		self.client = APIClient()
-		self.user = create_user(email="user@example.com", password="test123", name="Jansen Yan")
+		self.user = create_user(email="user@example.com", password="test123", first_name="Jansen", last_name="Yan")
 		self.client.force_authenticate(self.user)
 
 	def test_create_friendship(self):
@@ -134,12 +134,14 @@ class PrivateFriendshipApiTests(TestCase):
 	def test_filter_friends_by_name(self):
 		user1 = create_user(
 			email="test2@example.com",
-			name="Cloud Brown",
+			first_name="Biggs",
+			last_name="Brown",
 			password="test123",
 		)
 		user2 = create_user(
 			email="test3@example.com",
-			name="Barret Brown",
+			first_name="Wedge",
+			last_name="Brown",
 			password="test123"
 		)
 		friendship1 = Friendship.objects.create(
@@ -151,7 +153,7 @@ class PrivateFriendshipApiTests(TestCase):
 			friend=self.user
 		) 
 
-		res = self.client.get(FRIENDSHIP_URL + "?name=Barret")
+		res = self.client.get(FRIENDSHIP_URL + "?name=Biggs")
 		self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 		self.assertEqual(len(res.data), 1)
@@ -159,17 +161,19 @@ class PrivateFriendshipApiTests(TestCase):
 		# the creator of the friendship should be Joe
 		friend = User.objects.filter(id=res.data[0]["creator"])
 		self.assertIsNotNone(friend.first())
-		self.assertEqual(friend.first().name, "Barret Brown")
+		self.assertEqual(friend.first().first_name, "Biggs")
 
 	def test_filter_friend_requests_by_status(self):
 		user1 = create_user(
 			email="test2@example.com",
-			name="Cloud Brown",
+			first_name="Biggs",
+			last_name="Brown",
 			password="test123",
 		)
 		user2 = create_user(
 			email="test3@example.com",
-			name="Barret Brown",
+			first_name="Wedge",
+			last_name="Brown",
 			password="test123"
 		)
 		payload = {

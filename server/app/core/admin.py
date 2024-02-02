@@ -16,7 +16,7 @@ class UserAdmin(BaseUserAdmin):
 		Define the admin pages for users.
 	"""
 	ordering = ["id"]
-	list_display = ["email", "name"]
+	list_display = ["email", "first_name", "last_name"]
 	fieldsets = (
 		# the "None" represents the title of the section, and the fields are the editable fields
 		(None, {"fields": ("email", "password")}),
@@ -41,7 +41,8 @@ class UserAdmin(BaseUserAdmin):
 				"email",
 				"password1",
 				"password2",
-				"name",
+				"first_name",
+				"last_name",
 				"is_active",
 				"is_staff",
 				"is_superuser"
