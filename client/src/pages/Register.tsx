@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { styles, buttonTheme, colorVariants } from "../assets/styles"
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks" 
-import { login } from "../reducers/auth" 
+import { register as userRegister } from "../reducers/auth" 
 import { api } from "../config/api"
 import axios from "axios"
 import { useNavigate } from "react-router-dom" 
 import { useForm, Resolver } from "react-hook-form"
-import { FaEye } from "react-icons/fa"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 type FormValues = {
 	firstName: string
@@ -19,7 +19,7 @@ type FormValues = {
 export const Register = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const { basicUserInfo, errors: responseErrors } = useAppSelector((state) => state.auth)
+	const { regSuccess, errors: responseErrors } = useAppSelector((state) => state.auth)
 	const defaultButton = `${styles.button} ${buttonTheme("blue")}`
 	const { register, handleSubmit, formState: {errors} } = useForm<FormValues>()
 	const [showPassword, setShowPassword] = useState(false)
@@ -31,11 +31,13 @@ export const Register = () => {
 	    confirmPassword: { required: "Confirm Password is required"}
     }
     useEffect(() => {
-    	// 
-    }, [navigate, basicUserInfo, responseErrors])
+    	if (regSuccess && !responseErrors.length){
+    		navigate("/login", {state: {"message": "User registered successfully!"}})
+    	}
+    }, [navigate, regSuccess, responseErrors])
 
 	const onSubmit = (values: FormValues) => {
-		// dispatch(login(values))
+		dispatch(userRegister(values))
 	}
 	return (
 		<div className = "flex h-screen justify-center items-center">
@@ -49,7 +51,7 @@ export const Register = () => {
 					    </label>
 						<input 
 						className={styles.textInput}
-						{...register("email", registerOptions.email)}
+						{...register("firstName", registerOptions.firstName)}
 						/>
 				        {errors?.firstName && <small className = {colorVariants.red}>{errors.firstName.message}</small>}
 				    </div>
@@ -58,9 +60,8 @@ export const Register = () => {
 					    	Last Name:
 					    </label>
 						<input 
-						type="password"
 						className={styles.textInput}
-						{...register("password", registerOptions.password)}
+						{...register("lastName", registerOptions.lastName)}
 						/>
 				        {errors?.lastName && <small className = {colorVariants.red}>{errors.lastName.message}</small>}
 				    </div>
@@ -95,7 +96,11 @@ export const Register = () => {
 							className={styles.textInput}
 							{...register("password", registerOptions.password)}
 							/>
-							<FaEye onClick={() => setShowPassword(!showPassword)} className="absolute top-0 right-0 w-6 h-6 mt-2 mr-2 hover:opacity-60"/>
+							{
+								!showPassword ? 
+								<FaEye onClick={() => setShowPassword(!showPassword)} className="absolute top-0 right-0 w-6 h-6 mt-2 mr-2 hover:opacity-60"/> : 
+								<FaEyeSlash onClick={() => setShowPassword(!showPassword)} className="absolute top-0 right-0 w-6 h-6 mt-2 mr-2 hover:opacity-60"/>
+							}
 						</div>
 				        {errors?.confirmPassword && <small className = {colorVariants.red}>{errors.confirmPassword.message}</small>}
 				    </div>

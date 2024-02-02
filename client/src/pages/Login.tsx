@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks"
 import { login } from "../reducers/auth" 
 import { api } from "../config/api"
 import axios from "axios"
-import { useNavigate } from "react-router-dom" 
+import { useLocation, useNavigate } from "react-router-dom" 
 import { useForm, Resolver } from "react-hook-form"
 
 type FormValues = {
@@ -14,6 +14,7 @@ type FormValues = {
 
 export const Login = () => {
 	const dispatch = useAppDispatch()
+	const location = useLocation()
 	const navigate = useNavigate()
 	const { basicUserInfo, errors: responseErrors } = useAppSelector((state) => state.auth)
 	const defaultButton = `${styles.button} ${buttonTheme("blue")}`
@@ -37,6 +38,7 @@ export const Login = () => {
 			<div className = "w-96 border p-4 mb-32">
 				<div><h1 className = "text-2xl">Login</h1></div>
 				{responseErrors.length ? (responseErrors.map((errorMessage) => <p className = {colorVariants.red}>{errorMessage}</p>)) : null}
+				{location.state?.message ? <p>{location.state.message}</p> : null}
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="md:flex flex-col mt-2 mb-2">
 					    <label className={`${styles.label}`}>

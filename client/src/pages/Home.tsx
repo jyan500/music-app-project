@@ -1,9 +1,10 @@
-import React from "react"
-import { useAppDispatch } from "../hooks/redux-hooks" 
+import React, {useEffect} from "react"
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks" 
 import { logout } from "../reducers/auth" 
 
 export const Home = () => {
 	const dispatch = useAppDispatch()
+	const { basicUserInfo } = useAppSelector((state) => state.auth)
 	const onLogout = () => {
 		dispatch(logout())
 	}
