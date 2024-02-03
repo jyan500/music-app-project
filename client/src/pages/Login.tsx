@@ -30,6 +30,10 @@ export const Login = () => {
     	}	
     }, [navigate, basicUserInfo, responseErrors])
 
+    useEffect(() => {
+    	window.history.replaceState(null, location.pathname)
+    }, [])
+
 	const onSubmit = (values: FormValues) => {
 		dispatch(login(values))
 	}
