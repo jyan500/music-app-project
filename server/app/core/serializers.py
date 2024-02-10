@@ -7,7 +7,7 @@ from core.models import (
 	FriendRequestStatus,
 	Genre,
 	Playlist,
-	Song,
+	Track,
 	User
 )
 class FriendshipSerializer(serializers.ModelSerializer):
@@ -57,36 +57,18 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 		return None
 
 
-
-
-class ArtistSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Artist
-		fields = "__all__"
-		read_only_fields = ["created_at"]
-
 class GenreSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Genre
 		fields = "__all__"
 		read_only_fields = ["created_at"]
 
-class SongSerializer(serializers.ModelSerializer):
-	artist = ArtistSerializer()
-	genre = GenreSerializer()
+class ArtistSerializer(serializers.ModelSerializer):
+	genres = GenreSerializer(many=True, required=False)
 	class Meta:
-		model = Song
+		model = Artist
 		fields = "__all__"
 		read_only_fields = ["created_at"]
-
-	def create(self, validated_data):
-		print("validated_data: ", validated_data)
-		artist = validated_data.pop("artist")
-		genre = validated_data.pop("genre")
-		created_artist = Artist.objects.create(**artist)
-		created_genre = Genre.objects.create(**genre)
-		song = Song.objects.create(**validated_data, artist=created_artist, genre=created_genre)
-		return song
 
 class AlbumSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -95,3 +77,16 @@ class AlbumSerializer(serializers.ModelSerializer):
 class PlaylistSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Playlist
+
+class TrackSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Track
+		fields = "__all__"
+		read_only_fields = ["created_at"]
+
+	# def create(self, validated_data):
+	# 	print("validated_data: ", validated_data)
+	# 	created_artist = Artist.objects.create(**artist)
+	# 	created_genre = Genre.objects.create(**genre)
+	# 	track = Track.objects.create(**validated_data, artist=created_artist, genre=created_genre)
+	# 	return track

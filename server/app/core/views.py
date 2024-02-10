@@ -20,7 +20,7 @@ from core.models import (
 	FriendRequest,
 	FriendRequestStatus,
 	Genre,	
-	Song,
+	Track,
 	User,
 )
 from django.db import models
@@ -37,12 +37,15 @@ class FriendshipViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		# filter friends by...
 		# name
-		name = self.request.query_params.get("name")
+		first_name = self.request.query_params.get("first_name")
+		last_name = self.request.query_params.get("last_name")
 		user = self.request.user
 		queryset = self.queryset
 		queryset = queryset.filter(models.Q(creator=user)|models.Q(friend=user))
-		if name:
-			queryset = queryset.filter(models.Q(friend__name__icontains=name) | models.Q(creator__name__icontains=name))
+		if first_name:
+			queryset = queryset.filter(models.Q(friend__first_name__icontains=first_name) | models.Q(creator__first_name__icontains=first_name))
+		if last_name:
+			queryset = queryset.filter(models.Q(friend__last_name__icontains=last_name) | models.Q(creator__last_name__icontains=last_name))
 		return queryset
 
 	# either accept or reject a friend request
@@ -130,9 +133,9 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 		return queryset.order_by("name")
 
-class SongViewSet(viewsets.ModelViewSet):
-	serializer_class = serializers.SongSerializer
-	queryset = Song.objects.all()
+class TrackViewSet(viewsets.ModelViewSet):
+	serializer_class = serializers.TrackSerializer
+	queryset = Track.objects.all()
 	authentication_classes = [TokenAuthentication]
 	permission_classes = [IsAuthenticated]
 
@@ -144,10 +147,10 @@ class SongViewSet(viewsets.ModelViewSet):
 
 		if name:
 			queryset = queryset.filter(name__icontains=name)
-		if artist_name:
-			queryset = queryset.filter(artist__name__icontains=artist_name)
-		if genre_name:
-			queryset = queryset.filter(genre__name__icontains=genre_name)
+		# if artist_name:
+		# 	queryset = queryset.filter(artist__name__icontains=artist_name)
+		# if genre_name:
+		# 	queryset = queryset.filter(genre__name__icontains=genre_name)
 
 		return queryset.order_by("name")
 

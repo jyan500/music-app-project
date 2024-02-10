@@ -1,5 +1,6 @@
 from core.models import (
-	Artist
+	Artist,
+	Genre
 )
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -18,13 +19,14 @@ class PrivateArtistApiTests(TestCase):
 
 	def setUp(self):
 		self.client = APIClient()
-		self.user = create_user(email="user@example.com", password="test123", name="Jansen Yan")
+		self.user = create_user(email="user@example.com", password="test123", first_name="Jansen",last_name="Yan")
 		self.client.force_authenticate(self.user)
 
 	def test_create_artist(self):
 		payload = {
 			"name":"Rob Araujo",	
 			"description": "",
+			"image": "",
 			"years_active": 4,
 		}	
 		res = self.client.post(ARTIST_URL, payload)
@@ -36,6 +38,7 @@ class PrivateArtistApiTests(TestCase):
 		payload1 = {
 			"name":"Rob Araujo",	
 			"description": "Jazz Pianist - Hip Hop R&B",
+			"image": "",
 			"years_active": 4,
 		}	
 		res = self.client.post(ARTIST_URL, payload1)
@@ -43,6 +46,7 @@ class PrivateArtistApiTests(TestCase):
 
 		payload2 = {
 			"name":"Miles Davis",	
+			"image": "",
 			"description": "Jazz Musician - Trumpet",
 			"years_active": 20,
 		}	

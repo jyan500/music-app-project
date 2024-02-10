@@ -15,7 +15,7 @@ router.register("friendship", views.FriendshipViewSet)
 router.register("friend-request", views.FriendRequestViewSet, basename="friend-request")
 router.register("artist", views.ArtistViewSet)
 router.register("genre", views.GenreViewSet)
-router.register("song", views.SongViewSet)
+router.register("track", views.TrackViewSet)
 
 app_name = "core"
 # any requests made to the create/ will be handled the CreateUserView

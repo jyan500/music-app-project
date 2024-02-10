@@ -3,9 +3,9 @@ import { Link, Outlet, Navigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks" 
 
 const ProtectedLayout = () => {
-	const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo)	
+	const token = useAppSelector((state) => state.auth.token)	
 
-	if (!basicUserInfo){
+	if (!token){
 		return <Navigate replace to = {"/login"}/>
 	}
 

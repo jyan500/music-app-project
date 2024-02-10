@@ -153,7 +153,7 @@ class PrivateFriendshipApiTests(TestCase):
 			friend=self.user
 		) 
 
-		res = self.client.get(FRIENDSHIP_URL + "?name=Biggs")
+		res = self.client.get(FRIENDSHIP_URL + "?first_name=Biggs")
 		self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 		self.assertEqual(len(res.data), 1)

@@ -82,33 +82,29 @@ class FriendRequest(models.Model):
         default=FriendRequestStatus.PENDING,
     )
 
-
-class Artist(models.Model):
-	name = models.CharField(max_length=255)
-	description = models.TextField(null=True)
-	years_active = models.IntegerField(null=True)
-	created_at = models.DateTimeField(auto_now_add=True, editable=False)
-
 class Genre(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.TextField(null=True)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
-class Song(models.Model):
+class Artist(models.Model):
 	name = models.CharField(max_length=255)
-	date = models.DateField()
-	artist = models.ForeignKey(Artist, related_name="artist", on_delete=models.CASCADE)
-	genre = models.ForeignKey(Genre, related_name="song_genre", on_delete=models.CASCADE)
+	description = models.TextField(null=True)
+	image = models.TextField(null=True)
+	years_active = models.IntegerField(null=True)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
+	genres = models.ManyToManyField(Genre)
 
 class Album(models.Model):
-	name = models.CharField(max_length=255)
+	name = models.CharField(max_length=255)                           
 	date = models.DateField()
-	genre = models.ForeignKey(Genre, related_name="album_genre", on_delete=models.CASCADE)
-	songs = models.ManyToManyField(Song)
+	image = models.TextField(null=True)
+	artists = models.ManyToManyField(Artist)
+	genres = models.ManyToManyField(Genre)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 	class AlbumType(models.TextChoices):
+		ALBUM = 'ALBUM', _('Album')
 		SINGLE = 'SINGLE', _('Single')
 		COMPILATION = 'COMPILATION', _('Compilation')
 
@@ -118,11 +114,17 @@ class Album(models.Model):
         default=AlbumType.COMPILATION,
     )
 
+class Track(models.Model):
+	name = models.CharField(max_length=255)
+	date = models.DateField()
+	album = models.ForeignKey(Album, related_name="album", on_delete=models.CASCADE)
+	created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
 class Playlist(models.Model):
 	name = models.CharField(max_length=255)
 	creator = models.ForeignKey(User, related_name="creator", on_delete=models.CASCADE)
 	collaborators = models.ManyToManyField(User)
-	songs = models.ManyToManyField(Song)
+	tracks = models.ManyToManyField(Track)
 	views = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
 

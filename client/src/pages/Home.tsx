@@ -4,7 +4,7 @@ import { logout } from "../reducers/auth"
 
 export const Home = () => {
 	const dispatch = useAppDispatch()
-	const { basicUserInfo } = useAppSelector((state) => state.auth)
+	const { token } = useAppSelector((state) => state.auth)
 	const onLogout = () => {
 		dispatch(logout())
 	}

@@ -18,7 +18,7 @@ class PrivateGenreApiTests(TestCase):
 
 	def setUp(self):
 		self.client = APIClient()
-		self.user = create_user(email="user@example.com", password="test123", name="Jansen Yan")
+		self.user = create_user(email="user@example.com", password="test123", first_name="Jansen",last_name="Yan")
 		self.client.force_authenticate(self.user)
 
 	def test_create_genre(self):

@@ -5,3 +5,4 @@
 export const parseErrorResponse = (err: Record<string, any>): Array<string> => {
 	return Object.values(err).map((e) => e[0])
 }
+

@@ -27,7 +27,7 @@ type UserProfileData = {
 }
 
 type AuthApiState = {
-	basicUserInfo?: UserBasicInfo | null
+	token?: string | null
 	userProfileData?: UserProfileData | null
 	regSuccess: boolean
 	errors: Array<string> 
@@ -68,7 +68,7 @@ export const getUser = createAsyncThunk("users/profile", async (userId: string) 
 })
 
 const initialState: AuthApiState = {
-	basicUserInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo") as string) : null,
+	token: localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token") as string) : null,
 	userProfileData: null,
 	regSuccess: false,
 	errors: [],
@@ -80,17 +80,26 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		logout: (state) => {
-			localStorage.removeItem("userInfo")
-			state.basicUserInfo = null
-		}	
+			localStorage.removeItem("token")
+			state.token = null
+		},
+		setCredentials: (
+			state,
+			{
+				payload: {token},
+			}: PayloadAction<{token: string}>,
+		) => {
+			state.token = token
+			localStorage.setItem("token", JSON.stringify(token))
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(login.pending, (state) => {
 			state.errors = []
 		}).addCase(
 			login.fulfilled,
-			(state, action: PayloadAction<UserBasicInfo>) => {
-				state.basicUserInfo = action.payload
+			(state, action: PayloadAction<string>) => {
+				state.token = action.payload
 			}
 		).addCase(login.rejected, (state, action) => {
 			state.errors = parseErrorResponse(action.payload as Record<string, any>) || ["Login Failed"]
@@ -110,5 +119,5 @@ const authSlice = createSlice({
 	}
 })
 
-export const { logout } = authSlice.actions 
+export const { logout, setCredentials } = authSlice.actions 
 export const authReducer = authSlice.reducer
