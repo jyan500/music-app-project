@@ -117,12 +117,12 @@ class Album(models.Model):
 class Track(models.Model):
 	name = models.CharField(max_length=255)
 	date = models.DateField()
-	album = models.ForeignKey(Album, related_name="album", on_delete=models.CASCADE)
+	album = models.ForeignKey(Album, related_name="tracks", on_delete=models.CASCADE)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 class Playlist(models.Model):
 	name = models.CharField(max_length=255)
-	creator = models.ForeignKey(User, related_name="creator", on_delete=models.CASCADE)
+	creator = models.ForeignKey(User, related_name="playlists", on_delete=models.CASCADE)
 	collaborators = models.ManyToManyField(User)
 	tracks = models.ManyToManyField(Track)
 	views = models.IntegerField(default=0)

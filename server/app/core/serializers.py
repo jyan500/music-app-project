@@ -71,12 +71,18 @@ class ArtistSerializer(serializers.ModelSerializer):
 		read_only_fields = ["created_at"]
 
 class AlbumSerializer(serializers.ModelSerializer):
+	genres = GenreSerializer(many=True, required=False)
+	artists = ArtistSerializer(many=True, required=False)
 	class Meta:
 		model = Album
+		fields = "__all__"
+		read_only_fields = ["created_at"]
 
 class PlaylistSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Playlist
+		fields = "__all__"
+		read_only_fields = ["created_at"]
 
 class TrackSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -15,6 +15,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import (
+	Album,
 	Artist,
 	Friendship,
 	FriendRequest,
@@ -153,4 +154,10 @@ class TrackViewSet(viewsets.ModelViewSet):
 		# 	queryset = queryset.filter(genre__name__icontains=genre_name)
 
 		return queryset.order_by("name")
+
+class AlbumViewSet(viewsets.ModelViewSet):
+	serializer_class = serializers.AlbumSerializer
+	queryset = Album.objects.all()
+	authentication_classes = [TokenAuthentication]
+	permission_classes = [IsAuthenticated]
 
